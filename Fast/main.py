@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI,HTTPException
 from typing import Optional
 
 app = FastAPI(
@@ -19,41 +19,26 @@ usuarios = [
 def home():
     return {"hello": "world FastAPI"}
 
-# Endpoint promedio
-@app.get("/promedio", tags=["Mi Calificacion Parcial"])
-def promedio():
-    return {"promedio": 10}
+#Endpoint CONSULTA TODOS
+@app.get('/todosUsuarios', tags=['Operaciónes CRUD'])
+def leerUsuarios():
+    return {"Los usuarios registrados son:": usuarios}
 
-# Endpoint parámetro opcional
-@app.get("/usuario/", tags=["Parametro Opcional"])
-def consultausuario(id: Optional[int] = None):
-    if id is not None:
-        for usu in usuarios:
-            if usu["id"] == id:
-                return {"mensaje": "Usuario encontrado", "usuario": usu}
+#Endpoint AGREGAR NUEVOS
+@app.post('/usuario', tags=['Operaciónes CRUD'])
+def agregarUsuario(usuario:dict):
+    for usr in usuarios:
+        if usr["id"] == usuario.get("id"):
+            raise HTTPException(status_code=400, detail="El id ya existe")
+        usuarios.append(usuario)
+        return usuario
+
+#Endopoint
+@app.put('/usuario/{id}', tags=['Operaciónes CRUD'])
+def actualizarUsuario(id: int, usuario: dict):
+    for usr in usuarios:
+        if usr["id"] == id:
+            usr["nombre"] = usuario.get("nombre")
+            usr["edad"] = usuario.get("edad")
+            return usuario
         
-        return {"mensaje": f"No se encontró el usuario con id: {id}"}
-    else :
-        return {"mensaje": "No se proporcionó un id"}
-
-#endpoint con varios parametro opcionales
-@app.get("/usuarios/", tags=["3 parámetros opcionales"])
-async def consulta_usuarios(
-    usuario_id: Optional[int] = None,
-    nombre: Optional[str] = None,
-    edad: Optional[int] = None
-):
-    resultados = []
-
-    for usuario in usuarios:
-        if (
-            (usuario_id is None or usuario["id"] == usuario_id) and
-            (nombre is None or usuario["nombre"].lower() == nombre.lower()) and
-            (edad is None or usuario["edad"] == edad)
-        ):
-            resultados.append(usuario)
-
-    if resultados:
-        return {"usuarios_encontrados": resultados}
-    else:
-        return {"mensaje": "No se encontraron usuarios que coincidan con los parámetros proporcionados."}
