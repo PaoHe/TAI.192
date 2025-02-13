@@ -6,8 +6,11 @@ app = FastAPI(
     version="1.0.1"
 )
 
+#Endpoint Obtener Tareas
+@app.get('/tareas')
+def optenerTareas():
+    return { }
 
-#Endpoint 
-@app.get('/')
-def home():
-    return {'mensaje': 'Holi'}
+
+
+
