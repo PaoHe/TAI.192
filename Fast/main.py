@@ -33,7 +33,7 @@ def agregarUsuario(usuario:dict):
         usuarios.append(usuario)
         return usuario
 
-#Endopoint
+#Endopoint ACTUALIZAR USUARIO
 @app.put('/usuario/{id}', tags=['Operaciónes CRUD'])
 def actualizarUsuario(id: int, usuario: dict):
     for usr in usuarios:
