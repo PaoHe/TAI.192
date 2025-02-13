@@ -41,4 +41,13 @@ def actualizarUsuario(id: int, usuario: dict):
             usr["nombre"] = usuario.get("nombre")
             usr["edad"] = usuario.get("edad")
             return usuario
-        
+
+#Endopoint ELIMINAR USUARIO
+@app.delete('/usuario/{id}', tags=['Operaciónes CRUD'])
+def eliminarUsuario(id: int):   
+    for usr in usuarios:
+        if usr["id"] == id:
+            usuarios.remove(usr)
+            return {"Mensaje": "El usuario ha sido eliminado"}
+    return{"Mensaje":"No valido"}
+
