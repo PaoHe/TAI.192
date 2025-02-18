@@ -40,9 +40,29 @@ def crearTareas (tarea: str, estado: str, vencimiento: str ):
     tareas.append(nuevaTarea)
     return nuevaTarea
 
+#Endpoint Actualizar tarea existente
+@app.put('/tareas/{tarea_id}')
+def actualizarTarea(tarea_id: int, tarea: str = None, estado: str = None, vencimiento: str = None):
+    tareaExistente = next((t for t in tareas if t ["id"] ==  tarea_id), None)
+    if tareaExistente is None:
+        return {"Error": "La tarea no se encontro"}
+    
+    if tarea is not None:
+        tareaExistente ["Tarea"] = tarea
+    if estado is not None:
+        tareaExistente ["Estado"] = estado
+    if vencimiento is not None:
+        tareaExistente ["Vencimiento"] = vencimiento
+    
 
+    return tareaExistente
 
-
+#Endpoint Eliminar tarea existente
+@app.delete('/tareas/{tarea_id}')
+def eliminarTarea (tarea_id : int):
+    global tareas
+    tareas = [ t for t in tareas if t["id"] != tarea_id]
+    return {"Mensaje": "La tarea eliminada"}
 
 
 
