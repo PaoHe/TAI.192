@@ -1,8 +1,9 @@
-from fastapi import FastAPI,HTTPException
+from fastapi import FastAPI,HTTPException, Depends  
 from fastapi.responses import JSONResponse
 from typing import Optional, List
 from modelsPydantic import modeloUsuario, modeloAuth
 from genToken import createToken
+from middlewares import BearerJWT
 
 app = FastAPI(
     title="Mi Primer Parcial 192",
@@ -34,7 +35,7 @@ def login(autirizacion:modeloAuth):
         return{"Aviso": "Usuario sin autorizacion"}
 
 #Endpoint CONSULTA TODOS
-@app.get('/todosUsuarios', response_model=List[modeloUsuario], tags=['Operaciónes CRUD'])
+@app.get('/todosUsuarios',dependencies= [Depends(BearerJWT())], response_model=List[modeloUsuario], tags=['Operaciónes CRUD'])
 def leerUsuarios():
     return usuarios
 
