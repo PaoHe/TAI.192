@@ -4,12 +4,16 @@ from typing import Optional, List
 from modelsPydantic import modeloUsuario, modeloAuth
 from genToken import createToken
 from middlewares import BearerJWT
+from BD.conexion import Session,engine,Base
+from models.modelsDB import User
 
 app = FastAPI(
     title="Mi Primer Parcial 192",
     description="Paola",
     version="1.0.1"
 )
+
+Base.metadata.create_all(bind = engine)
 
 #BD ficticia
 usuarios = [
